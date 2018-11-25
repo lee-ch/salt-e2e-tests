@@ -65,12 +65,11 @@ def output_staterun(state_output, color=False):
             state_results = dict(results)
             state_pad = max(len(name) for name in state_results)
             for data in sorted(state_results, key=lambda x: x.lower()):
+                value = str(state_results[data])
                 if not is_windows() and color:
-                    if 'pass' not in state_results[data].lower() or \
-                            'fail' not in state_results[data].lower():
+                    if 'pass' not in value.lower() or \
+                            'fail' not in value.lower():
                         value = '\033[1;34m{0}\033[0m'.format(state_results[data])
-                else:
-                    value = state_results[data]
                 value_pad = max(len(name) for name in str(state_results[data]))
                 padding = max(state_pad, value_pad)
                 fmt = '{0:>{pad}}: {1}'
