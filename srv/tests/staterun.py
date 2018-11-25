@@ -61,8 +61,6 @@ def output_staterun(state_output, color=False):
     info = []
     for output in staterun_info(state_output, color=color):
         for module, results in output.items():
-            if not is_windows() and color:
-                module = '\033[36m{0}\033[0m'.format(module)
             info.append('Test: {0}'.format(module))
             state_results = dict(results)
             state_pad = max(len(name) for name in state_results)
