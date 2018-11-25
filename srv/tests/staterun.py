@@ -61,6 +61,8 @@ def output_staterun(state_output, color=False):
     info = []
     for output in staterun_info(state_output, color=color):
         for module, results in output.items():
+            if not is_windows() and color:
+                module = '\033[36m{0}\033[0m'.format(module)
             info.append('Test: {0}'.format(module))
             state_results = dict(results)
             state_pad = max(len(name) for name in state_results)
@@ -69,7 +71,7 @@ def output_staterun(state_output, color=False):
                 if not is_windows() and color:
                     if 'pass' not in value.lower() or \
                             'fail' not in value.lower():
-                        value = '\033[1;34m{0}\033[0m'.format(state_results[data])
+                        value = '\033[36m{0}\033[0m'.format(state_results[data])
                 value_pad = max(len(name) for name in str(state_results[data]))
                 padding = max(state_pad, value_pad)
                 fmt = '{0:>{pad}}: {1}'
