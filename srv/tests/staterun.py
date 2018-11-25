@@ -72,9 +72,11 @@ def output_staterun(state_output, color=False):
                 padding = max(state_pad, value_pad)
                 if not is_windows() and color:
                     if 'pass' in value.lower():
-                        col_code = '\033[33m'
-                    else:
+                        col_code = '\033[32m'
+                    elif 'fail' in value.lower():
                         col_code = '\033[31m'
+                    else:
+                        col_code = '\033[0m'
                     fmt = '{col}{0:>{pad}}: {1}\033[0m'.format(data,
                                                                value,
                                                                col=col_code,
