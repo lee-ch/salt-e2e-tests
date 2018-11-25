@@ -31,7 +31,7 @@ def flatten_dict(d):
     return dict(items)
 
 
-def staterun_info(d):
+def staterun_info(d, color=False):
     for k, v in d.items():
         dict_key = k.split('_|-')
         mod_name = '.'.join(dict_key[::len(dict_key)-1])
@@ -45,27 +45,37 @@ def staterun_info(d):
                 ('comment', highstate[mod_name]['comment'])
             ]
             if d[mod_name]['result']:
-                if not is_windows():
+                if not is_windows() and color:
                     result.append(('test', '\033[32mPASS\033[0m'))
+                else:
+                    result.append(('test', 'PASS'))
             else:
-                if not is_windows():
+                if not is_windows() and color:
                     result.append(('test', '\033[31mFAIL\033[0m'))
+                else:
+                    result.append(('test', 'FAIL'))
         yield {mod_name: result}
 
 
-def output_staterun(state_output):
+def output_staterun(state_output, color=False):
     info = []
-    for output in staterun_info(state_output):
+    for output in staterun_info(state_output, color=color):
         for module, results in output.items():
             info.append('Test: {0}'.format(module))
             state_results = dict(results)
             state_pad = max(len(name) for name in state_results)
             for data in sorted(state_results, key=lambda x: x.lower()):
+                if not is_windows() and color:
+                    if 'pass' not in state_results[data].lower() or \
+                            'fail' not in state_results[data].lower():
+                        value = '\033[1;34m{0}\033[0m'.format(state_results[data])
+                else:
+                    value = state_results[data]
                 value_pad = max(len(name) for name in str(state_results[data]))
                 padding = max(state_pad, value_pad)
                 fmt = '{0:>{pad}}: {1}'
                 run = fmt.format(data,
-                                 state_results[data],
+                                 value,
                                  pad=padding)
                 info.append(run)
         info.append('\n')
@@ -92,5 +102,5 @@ if __name__ == '__main__':
 
     results_file = os.path.join(results_dir, 'results.out')
     with open(results_file, 'w+') as fh:
-        for output in output_staterun(highstate):
+        for output in output_staterun(highstate, color=True):
             print('{0}'.format(output))
