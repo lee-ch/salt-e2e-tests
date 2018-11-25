@@ -68,13 +68,19 @@ def output_staterun(state_output, color=False):
             state_pad = max(len(name) for name in state_results)
             for data in sorted(state_results, key=lambda x: x.lower()):
                 value = str(state_results[data])
-                if not is_windows() and color:
-                    if 'pass' not in value.lower() or \
-                            'fail' not in value.lower():
-                        value = '\033[36m{0}\033[0m'.format(state_results[data])
                 value_pad = max(len(name) for name in str(state_results[data]))
                 padding = max(state_pad, value_pad)
-                fmt = '{0:>{pad}}: {1}'
+                if not is_windows() and color:
+                    if 'pass' in value.lower():
+                        col_code = '\033[33m'
+                    else:
+                        col_code = '\033[31m'
+                    fmt = '{col}{0:>{pad}}: {1}\033[0m'.format(data,
+                                                               value,
+                                                               col=col_code,
+                                                               pad=padding)
+                else:
+                    fmt = '{0:>{pad}}: {1}'
                 run = fmt.format(data,
                                  value,
                                  pad=padding)
