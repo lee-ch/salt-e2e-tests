@@ -45,15 +45,9 @@ def staterun_info(d, color=False):
                 ('comment', highstate[mod_name]['comment'])
             ]
             if d[mod_name]['result']:
-                if not is_windows() and color:
-                    result.append(('test', '\033[32mPASS\033[0m'))
-                else:
-                    result.append(('test', 'PASS'))
+                result.append(('test', 'PASS'))
             else:
-                if not is_windows() and color:
-                    result.append(('test', '\033[31mFAIL\033[0m'))
-                else:
-                    result.append(('test', 'FAIL'))
+                result.append(('test', 'FAIL'))
         yield {mod_name: result}
 
 
