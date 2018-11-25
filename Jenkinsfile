@@ -10,11 +10,7 @@ pipeline {
                     def workspace = pwd()
                 }
                 // run our state test (runs state.highstate)
-                sh "docker run --rm --name salt-masterless-centos7 
-                    --mount
-                      type=bind,source=${workspace}/srv/tests,target=/srv/tests
-                    salt-masterless:centos7
-                    sh -c 'python /srv/tests/staterun.py'"
+                sh "docker run --rm --name salt-masterless-centos7 --mount type=bind,source=${workspace}/srv/tests,target=/srv/tests salt-masterless:centos7 sh -c 'python /srv/tests/staterun.py'"
             }
         }
     }
